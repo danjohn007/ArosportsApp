@@ -20,9 +20,9 @@ function getBaseUrl() {
 
 // Configuración de la base de datos
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'arosports');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_NAME', 'fix360_arosports');
+define('DB_USER', 'fix360_arosports');
+define('DB_PASS', 'Danjohn007!');
 define('DB_CHARSET', 'utf8');
 
 // Configuración del sistema
