@@ -1,0 +1,123 @@
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="bi bi-house-<?= $action === 'create' ? 'add' : 'gear' ?>"></i> 
+            <?= $action === 'create' ? 'Crear Fraccionamiento' : 'Editar Fraccionamiento' ?>
+        </h1>
+        <a href="<?= BASE_URL ?>/admin/fraccionamientos" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Volver a Lista
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Datos del Fraccionamiento
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <?php if (!empty($error)): ?>
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle"></i> <?= htmlspecialchars($error) ?>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($success)): ?>
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle"></i> <?= htmlspecialchars($success) ?>
+                    </div>
+                    <?php endif; ?>
+
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre del Fraccionamiento *</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="nombre" 
+                                   name="nombre" 
+                                   required 
+                                   value="<?= htmlspecialchars($fraccionamiento['nombre'] ?? $_POST['nombre'] ?? '') ?>">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="club_id" class="form-label">Club Asociado</label>
+                            <select class="form-control" id="club_id" name="club_id">
+                                <option value="">Sin club asociado</option>
+                                <?php foreach ($clubes as $club): ?>
+                                <option value="<?= $club['id'] ?>" <?= ($fraccionamiento['club_id'] ?? $_POST['club_id'] ?? '') == $club['id'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($club['nombre']) ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" 
+                                      id="descripcion" 
+                                      name="descripcion" 
+                                      rows="3"><?= htmlspecialchars($fraccionamiento['descripcion'] ?? $_POST['descripcion'] ?? '') ?></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <textarea class="form-control" 
+                                      id="direccion" 
+                                      name="direccion" 
+                                      rows="2"><?= htmlspecialchars($fraccionamiento['direccion'] ?? $_POST['direccion'] ?? '') ?></textarea>
+                        </div>
+
+                        <?php if ($action === 'edit'): ?>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                       type="checkbox" 
+                                       id="activo" 
+                                       name="activo" 
+                                       <?= ($fraccionamiento['activo'] ?? 1) ? 'checked' : '' ?>>
+                                <label class="form-check-label" for="activo">
+                                    Fraccionamiento activo
+                                </label>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="<?= BASE_URL ?>/admin/fraccionamientos" class="btn btn-secondary me-md-2">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> 
+                                <?= $action === 'create' ? 'Crear Fraccionamiento' : 'Actualizar Fraccionamiento' ?>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Información</h6>
+                </div>
+                <div class="card-body">
+                    <h6><i class="bi bi-info-circle text-info"></i> Fraccionamientos</h6>
+                    <p class="text-muted">
+                        Los fraccionamientos son áreas residenciales que pueden estar asociadas 
+                        a un club específico para facilitar la gestión de reservas.
+                    </p>
+
+                    <?php if ($action === 'edit' && isset($fraccionamiento)): ?>
+                    <hr>
+                    <h6><i class="bi bi-calendar text-info"></i> Información de Registro</h6>
+                    <p><strong>Creado:</strong> <?= date('d/m/Y H:i', strtotime($fraccionamiento['fecha_registro'])) ?></p>
+                    <p><strong>Última actualización:</strong> <?= date('d/m/Y H:i', strtotime($fraccionamiento['fecha_actualizacion'])) ?></p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
