@@ -131,7 +131,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="form-text">
                                 <i class="bi bi-info-circle"></i> 
-                                <?php if ($_SESSION['user']['tipo_usuario'] === 'superadmin'): ?>
+                                <?php if ($_SESSION['user_role'] === 'superadmin'): ?>
                                     Como superadmin, la transacción será <strong>autorizada automáticamente</strong>.
                                 <?php else: ?>
                                     La transacción quedará <strong>pendiente de autorización</strong> por un administrador.

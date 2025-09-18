@@ -55,19 +55,38 @@
                             <i class="bi bi-speedometer2"></i> Dashboard
                         </a>
                     </li>
-                    <?php if ($_SESSION['user_role'] === 'superadmin'): ?>
+                    
+                    <!-- Transacciones disponible para todos los usuarios autenticados -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= BASE_URL ?>/admin/transacciones">
+                            <i class="bi bi-receipt"></i> Transacciones
+                        </a>
+                    </li>
+                    
+                    <?php if (in_array($_SESSION['user_role'], ['superadmin', 'admin'])): ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
                             <i class="bi bi-gear"></i> Administración
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="<?= BASE_URL ?>/admin/usuarios">Usuarios</a></li>
-                            <li><a class="dropdown-item" href="<?= BASE_URL ?>/admin/clubes">Clubes</a></li>
-                            <li><a class="dropdown-item" href="<?= BASE_URL ?>/admin/fraccionamientos">Fraccionamientos</a></li>
-                            <li><a class="dropdown-item" href="<?= BASE_URL ?>/admin/empresas">Empresas</a></li>
-                            <li><a class="dropdown-item" href="<?= BASE_URL ?>/admin/reservas">Reservas</a></li>
+                            <li><a class="dropdown-item" href="<?= BASE_URL ?>/admin/usuarios">
+                                <i class="bi bi-people"></i> Usuarios
+                            </a></li>
+                            <li><a class="dropdown-item" href="<?= BASE_URL ?>/admin/clubes">
+                                <i class="bi bi-building"></i> Clubes
+                            </a></li>
+                            <li><a class="dropdown-item" href="<?= BASE_URL ?>/admin/fraccionamientos">
+                                <i class="bi bi-geo-alt"></i> Fraccionamientos
+                            </a></li>
+                            <li><a class="dropdown-item" href="<?= BASE_URL ?>/admin/empresas">
+                                <i class="bi bi-briefcase"></i> Empresas
+                            </a></li>
+                            <li><a class="dropdown-item" href="<?= BASE_URL ?>/admin/reservas">
+                                <i class="bi bi-calendar-event"></i> Reservas
+                            </a></li>
                         </ul>
                     </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="<?= BASE_URL ?>/reportes">
                             <i class="bi bi-graph-up"></i> Reportes

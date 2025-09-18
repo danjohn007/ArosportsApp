@@ -148,9 +148,9 @@ class TransaccionesController extends BaseController {
                 
                 // Determinar estado inicial según tipo de usuario
                 $estado = 'pendiente';
-                if ($_SESSION['user']['tipo_usuario'] === 'superadmin') {
+                if ($_SESSION['user_role'] === 'superadmin') {
                     $estado = 'autorizada';
-                    $autorizada_por = $_SESSION['user']['id'];
+                    $autorizada_por = $_SESSION['user_id'];
                     $fecha_autorizacion = date('Y-m-d H:i:s');
                 } else {
                     $autorizada_por = null;
@@ -167,7 +167,7 @@ class TransaccionesController extends BaseController {
                 
                 $stmt->execute([
                     $categoria_id,
-                    $_SESSION['user']['id'],
+                    $_SESSION['user_id'],
                     $club_id ?: null,
                     $tipo,
                     $concepto,
@@ -229,7 +229,7 @@ class TransaccionesController extends BaseController {
     
     private function authorize() {
         // Solo superadmin y admin pueden autorizar
-        if (!in_array($_SESSION['user']['tipo_usuario'], ['superadmin', 'admin'])) {
+        if (!in_array($_SESSION['user_role'], ['superadmin', 'admin'])) {
             http_response_code(403);
             echo json_encode(['success' => false, 'message' => 'No tiene permisos para autorizar transacciones']);
             return;
@@ -252,7 +252,7 @@ class TransaccionesController extends BaseController {
                             fecha_autorizacion = NOW() 
                         WHERE id = ? AND estado = 'pendiente'
                     ");
-                    $stmt->execute([$_SESSION['user']['id'], $id]);
+                    $stmt->execute([$_SESSION['user_id'], $id]);
                     $message = 'Transacción autorizada exitosamente';
                 } else {
                     $stmt = $this->db->prepare("
@@ -262,7 +262,7 @@ class TransaccionesController extends BaseController {
                             fecha_autorizacion = NOW() 
                         WHERE id = ? AND estado = 'pendiente'
                     ");
-                    $stmt->execute([$_SESSION['user']['id'], $id]);
+                    $stmt->execute([$_SESSION['user_id'], $id]);
                     $message = 'Transacción cancelada exitosamente';
                 }
                 
@@ -279,7 +279,7 @@ class TransaccionesController extends BaseController {
     
     private function delete() {
         // Solo superadmin puede eliminar
-        if ($_SESSION['user']['tipo_usuario'] !== 'superadmin') {
+        if ($_SESSION['user_role'] !== 'superadmin') {
             http_response_code(403);
             echo json_encode(['success' => false, 'message' => 'No tiene permisos para eliminar transacciones']);
             return;

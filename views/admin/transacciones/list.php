@@ -174,7 +174,7 @@
                             <td><?= htmlspecialchars($transaccion['usuario_nombre']) ?></td>
                             <td>
                                 <div class="btn-group" role="group">
-                                    <?php if ($transaccion['estado'] === 'pendiente' && in_array($_SESSION['user']['tipo_usuario'], ['superadmin', 'admin'])): ?>
+                                    <?php if ($transaccion['estado'] === 'pendiente' && in_array($_SESSION['user_role'], ['superadmin', 'admin'])): ?>
                                     <button type="button" class="btn btn-sm btn-success" 
                                             onclick="autorizarTransaccion(<?= $transaccion['id'] ?>, 'autorizar')"
                                             title="Autorizar">
@@ -187,7 +187,7 @@
                                     </button>
                                     <?php endif; ?>
                                     
-                                    <?php if ($_SESSION['user']['tipo_usuario'] === 'superadmin'): ?>
+                                    <?php if ($_SESSION['user_role'] === 'superadmin'): ?>
                                     <button type="button" class="btn btn-sm btn-danger" 
                                             onclick="eliminarTransaccion(<?= $transaccion['id'] ?>)"
                                             title="Eliminar">

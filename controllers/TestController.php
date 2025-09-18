@@ -25,7 +25,7 @@ class TestController extends BaseController {
             try {
                 $conn = $database->getConnection();
                 
-                $tables = ['usuarios', 'clubes', 'fraccionamientos', 'empresas', 'reservas'];
+                $tables = ['usuarios', 'clubes', 'fraccionamientos', 'empresas', 'reservas', 'categorias', 'transacciones'];
                 $results['tables'] = [];
                 
                 foreach ($tables as $table) {

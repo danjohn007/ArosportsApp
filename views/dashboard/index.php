@@ -5,7 +5,7 @@
             <div class="text-muted me-3">
                 <i class="bi bi-calendar3"></i> <?= date('d/m/Y H:i') ?>
             </div>
-            <?php if (in_array($_SESSION['user']['tipo_usuario'], ['superadmin', 'admin', 'cliente'])): ?>
+            <?php if (in_array($_SESSION['user_role'], ['superadmin', 'admin', 'cliente'])): ?>
             <a href="<?= BASE_URL ?>/admin/transacciones?action=create" class="btn btn-primary btn-sm">
                 <i class="bi bi-plus-circle"></i> Nueva Transacción
             </a>
