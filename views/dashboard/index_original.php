@@ -5,7 +5,7 @@
             <div class="text-muted me-3">
                 <i class="bi bi-calendar3"></i> <?= date('d/m/Y H:i') ?>
             </div>
-            <?php if (in_array($_SESSION['user_role'], ['superadmin', 'admin', 'cliente'])): ?>
+            <?php if (in_array($_SESSION['user']['tipo_usuario'], ['superadmin', 'admin', 'cliente'])): ?>
             <a href="<?= BASE_URL ?>/admin/transacciones?action=create" class="btn btn-primary btn-sm">
                 <i class="bi bi-plus-circle"></i> Nueva Transacción
             </a>
@@ -338,7 +338,67 @@
         </div>
     </div>
 </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Ingresos por Club</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="ingresosPorClubChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reservas recientes -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Reservas Recientes</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuario</th>
+                            <th>Club</th>
+                            <th>Fecha</th>
+                            <th>Horario</th>
+                            <th>Precio</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($recentReservations as $reserva): ?>
+                        <tr>
+                            <td><?= $reserva['id'] ?></td>
+                            <td><?= htmlspecialchars($reserva['usuario_nombre'] ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($reserva['club_nombre'] ?? 'N/A') ?></td>
+                            <td><?= date('d/m/Y', strtotime($reserva['fecha_reserva'])) ?></td>
+                            <td><?= date('H:i', strtotime($reserva['hora_inicio'])) ?> - <?= date('H:i', strtotime($reserva['hora_fin'])) ?></td>
+                            <td>$<?= number_format($reserva['precio'], 2) ?></td>
+                            <td>
+                                <span class="badge bg-<?= getStatusColor($reserva['estado']) ?>">
+                                    <?= ucfirst($reserva['estado']) ?>
+                                </span>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                        
+                        <?php if (empty($recentReservations)): ?>
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">No hay reservas registradas</td>
+                        </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 <script>
 // Datos para los gráficos
 const ingresosPorMes = <?= json_encode($chartData['ingresos_por_mes']) ?>;

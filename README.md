@@ -4,10 +4,13 @@ Sistema completo de administración deportiva con dashboard financiero desarroll
 
 ## 🚀 Características Principales
 
-- **Dashboard Financiero**: Visualización de ingresos, estadísticas y gráficos interactivos
+- **Dashboard Financiero Avanzado**: Visualización completa de ingresos vs gastos con gráficos interactivos
+- **Sistema de Transacciones**: Gestión completa de gastos y retiros por categorías
 - **Gestión de Entidades**: Administración completa de Clubes, Fraccionamientos, Empresas y Usuarios
 - **Sistema de Reservas**: Control completo del sistema de reservas con seguimiento financiero
 - **Reportes Avanzados**: Generación de reportes por rangos de fechas y filtros
+- **Control de Autorización**: Sistema de autorización de transacciones por niveles de usuario
+- **Categorización Financiera**: Sistema de categorías predefinidas para ingresos y gastos
 - **Autenticación Segura**: Sistema de login con hash de contraseñas y control de sesiones
 - **URLs Amigables**: Sistema de routing con URLs limpias y semánticas
 - **Responsive Design**: Interfaz adaptable con Bootstrap 5
@@ -43,15 +46,20 @@ Copie todos los archivos al directorio de su servidor Apache (htdocs, www, etc.)
 
 #### Opción A: Configuración automática
 1. Cree una base de datos MySQL llamada `arosports`
-2. Importe el archivo `sql/arosports_structure.sql`
+2. Importe el archivo de estructura básica
 ```bash
 mysql -u root -p arosports < sql/arosports_structure.sql
+```
+3. **IMPORTANTE**: Ejecute el script de actualización para soporte de gastos y categorías
+```bash
+mysql -u root -p arosports < sql/arosports_update_v1.1.sql
 ```
 
 #### Opción B: Configuración manual
 ```sql
 CREATE DATABASE arosports CHARACTER SET utf8 COLLATE utf8_general_ci;
--- Luego ejecute el contenido de sql/arosports_structure.sql
+-- Ejecute el contenido de sql/arosports_structure.sql
+-- Ejecute el contenido de sql/arosports_update_v1.1.sql
 ```
 
 ### 4. Configurar credenciales
@@ -114,7 +122,8 @@ ArosportsApp/
 │   ├── js/              # JavaScript personalizado
 │   └── images/          # Imágenes del sistema
 ├── sql/                 # Scripts de base de datos
-│   └── arosports_structure.sql
+│   ├── arosports_structure.sql      # Estructura básica
+│   └── arosports_update_v1.1.sql    # Actualización para gastos y categorías
 ├── utils/               # Utilidades del sistema
 ├── .htaccess           # Configuración Apache
 ├── index.php           # Punto de entrada y router
@@ -142,25 +151,57 @@ El sistema maneja las siguientes entidades principales:
 - Información fiscal y de contacto
 
 ### Reservas (`reservas`)
-- **Núcleo del sistema financiero**
+- **Núcleo del sistema de ingresos**
 - Columna `precio` para tracking de ingresos
 - Estados: pendiente, confirmada, cancelada, completada
 - Relaciones con usuarios, clubes, fraccionamientos y empresas
 
-## 📊 Dashboard Financiero
+### Categorías (`categorias`) - **NUEVO v1.1**
+- Categorías predefinidas para ingresos y gastos
+- Colores personalizables para visualización en gráficos
+- Tipos: ingreso, gasto
+- Incluye categorías como: Mantenimiento, Servicios Públicos, Personal, etc.
 
-El dashboard proporciona:
+### Transacciones (`transacciones`) - **NUEVO v1.1**
+- **Sistema completo de gastos y retiros**
+- Soporte para múltiples tipos: ingreso, gasto, retiro
+- Estados de autorización: pendiente, autorizada, cancelada
+- Métodos de pago: efectivo, transferencia, cheque, tarjeta
+- Sistema de autorización por niveles de usuario
+- Campos para referencia, comprobantes y observaciones
+
+## 💰 Sistema de Gestión Financiera
+
+### Funcionalidades Principales
+- **Dashboard Expandido**: Métricas de ingresos, gastos y utilidades
+- **Gestión de Transacciones**: CRUD completo para gastos y retiros
+- **Sistema de Categorías**: Organización por tipos de gastos e ingresos
+- **Control de Autorización**: Flujo de aprobación para transacciones
+- **Reportes Avanzados**: Análisis financiero completo
+
+### Niveles de Usuario y Permisos
+- **Cliente**: Puede crear transacciones (quedan pendientes)
+- **Admin**: Puede autorizar/rechazar transacciones de otros usuarios
+- **Superadmin**: Autorización automática, puede eliminar transacciones
+
+## 📊 Dashboard Financiero Avanzado
+
+El dashboard proporciona una vista completa del estado financiero:
 
 ### Métricas Principales
-- **Total de Ingresos**: Suma de todas las reservas completadas
-- **Ingresos del Mes**: Ingresos del mes actual
-- **Total de Reservas**: Contador total de reservas
-- **Reservas Pendientes**: Reservas por confirmar
+- **Total de Ingresos**: Suma de reservas completadas + ingresos adicionales
+- **Total de Gastos**: Suma de todas las transacciones de gasto/retiro autorizadas
+- **Utilidad Total**: Diferencia entre ingresos totales y gastos totales
+- **Ingresos del Mes**: Ingresos del mes actual (reservas + transacciones)
+- **Gastos del Mes**: Gastos del mes actual
+- **Utilidad del Mes**: Ganancia/pérdida del mes actual
+- **Transacciones Pendientes**: Transacciones esperando autorización
 
-### Visualizaciones
-- **Gráfico de Línea**: Tendencia de ingresos por mes (últimos 6 meses)
-- **Gráfico de Dona**: Distribución de ingresos por club
-- **Tabla de Reservas**: Listado de reservas recientes con estados
+### Visualizaciones Avanzadas
+- **Gráfico Ingresos vs Gastos**: Comparativa mensual de los últimos 6 meses
+- **Gráfico de Gastos por Categoría**: Distribución de gastos del último mes
+- **Gráfico de Ingresos por Club**: Análisis de rendimiento por club
+- **Tabla de Reservas Recientes**: Actividad reciente del sistema
 
 ## 🔒 Seguridad
 
