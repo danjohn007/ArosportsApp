@@ -24,6 +24,7 @@ class Router {
             'admin/fraccionamientos' => ['controller' => 'AdminController', 'action' => 'fraccionamientos'],
             'admin/empresas' => ['controller' => 'AdminController', 'action' => 'empresas'],
             'admin/reservas' => ['controller' => 'AdminController', 'action' => 'reservas'],
+            'admin/transacciones' => ['controller' => 'TransaccionesController', 'action' => 'index'],
             'reportes' => ['controller' => 'ReportesController', 'action' => 'index'],
             'test-db' => ['controller' => 'TestController', 'action' => 'database']
         ];
