@@ -295,12 +295,24 @@ class AdminController extends BaseController {
             $telefono = trim($_POST['telefono'] ?? '');
             $email = trim($_POST['email'] ?? '');
             
+            // Datos del representante
+            $representante_nombre = trim($_POST['representante_nombre'] ?? '');
+            $representante_email = trim($_POST['representante_email'] ?? '');
+            $representante_telefono = trim($_POST['representante_telefono'] ?? '');
+            $representante_password = $_POST['representante_password'] ?? '';
+            
             if (empty($nombre)) {
                 $error = 'El nombre del club es obligatorio.';
             } else {
                 try {
-                    $stmt = $this->db->prepare("INSERT INTO clubes (nombre, descripcion, direccion, telefono, email) VALUES (?, ?, ?, ?, ?)");
-                    $stmt->execute([$nombre, $descripcion, $direccion, $telefono, $email]);
+                    // Hash password if provided
+                    $hashedPassword = null;
+                    if (!empty($representante_password)) {
+                        $hashedPassword = password_hash($representante_password, PASSWORD_DEFAULT);
+                    }
+                    
+                    $stmt = $this->db->prepare("INSERT INTO clubes (nombre, descripcion, direccion, telefono, email, representante_nombre, representante_email, representante_telefono, representante_password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    $stmt->execute([$nombre, $descripcion, $direccion, $telefono, $email, $representante_nombre, $representante_email, $representante_telefono, $hashedPassword]);
                     
                     $success = 'Club creado exitosamente.';
                 } catch (PDOException $e) {
@@ -346,12 +358,25 @@ class AdminController extends BaseController {
             $email = trim($_POST['email'] ?? '');
             $activo = isset($_POST['activo']) ? 1 : 0;
             
+            // Datos del representante
+            $representante_nombre = trim($_POST['representante_nombre'] ?? '');
+            $representante_email = trim($_POST['representante_email'] ?? '');
+            $representante_telefono = trim($_POST['representante_telefono'] ?? '');
+            $representante_password = $_POST['representante_password'] ?? '';
+            
             if (empty($nombre)) {
                 $error = 'El nombre del club es obligatorio.';
             } else {
                 try {
-                    $stmt = $this->db->prepare("UPDATE clubes SET nombre = ?, descripcion = ?, direccion = ?, telefono = ?, email = ?, activo = ? WHERE id = ?");
-                    $stmt->execute([$nombre, $descripcion, $direccion, $telefono, $email, $activo, $id]);
+                    // Only update password if a new one is provided
+                    if (!empty($representante_password)) {
+                        $hashedPassword = password_hash($representante_password, PASSWORD_DEFAULT);
+                        $stmt = $this->db->prepare("UPDATE clubes SET nombre = ?, descripcion = ?, direccion = ?, telefono = ?, email = ?, activo = ?, representante_nombre = ?, representante_email = ?, representante_telefono = ?, representante_password = ? WHERE id = ?");
+                        $stmt->execute([$nombre, $descripcion, $direccion, $telefono, $email, $activo, $representante_nombre, $representante_email, $representante_telefono, $hashedPassword, $id]);
+                    } else {
+                        $stmt = $this->db->prepare("UPDATE clubes SET nombre = ?, descripcion = ?, direccion = ?, telefono = ?, email = ?, activo = ?, representante_nombre = ?, representante_email = ?, representante_telefono = ? WHERE id = ?");
+                        $stmt->execute([$nombre, $descripcion, $direccion, $telefono, $email, $activo, $representante_nombre, $representante_email, $representante_telefono, $id]);
+                    }
                     
                     $success = 'Club actualizado exitosamente.';
                     
@@ -436,12 +461,24 @@ class AdminController extends BaseController {
             $direccion = trim($_POST['direccion'] ?? '');
             $club_id = $_POST['club_id'] ?? null;
             
+            // Datos del representante
+            $representante_nombre = trim($_POST['representante_nombre'] ?? '');
+            $representante_email = trim($_POST['representante_email'] ?? '');
+            $representante_telefono = trim($_POST['representante_telefono'] ?? '');
+            $representante_password = $_POST['representante_password'] ?? '';
+            
             if (empty($nombre)) {
                 $error = 'El nombre del fraccionamiento es obligatorio.';
             } else {
                 try {
-                    $stmt = $this->db->prepare("INSERT INTO fraccionamientos (nombre, descripcion, direccion, club_id) VALUES (?, ?, ?, ?)");
-                    $stmt->execute([$nombre, $descripcion, $direccion, $club_id ?: null]);
+                    // Hash password if provided
+                    $hashedPassword = null;
+                    if (!empty($representante_password)) {
+                        $hashedPassword = password_hash($representante_password, PASSWORD_DEFAULT);
+                    }
+                    
+                    $stmt = $this->db->prepare("INSERT INTO fraccionamientos (nombre, descripcion, direccion, club_id, representante_nombre, representante_email, representante_telefono, representante_password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                    $stmt->execute([$nombre, $descripcion, $direccion, $club_id ?: null, $representante_nombre, $representante_email, $representante_telefono, $hashedPassword]);
                     
                     $success = 'Fraccionamiento creado exitosamente.';
                 } catch (PDOException $e) {
@@ -496,12 +533,25 @@ class AdminController extends BaseController {
             $club_id = $_POST['club_id'] ?? null;
             $activo = isset($_POST['activo']) ? 1 : 0;
             
+            // Datos del representante
+            $representante_nombre = trim($_POST['representante_nombre'] ?? '');
+            $representante_email = trim($_POST['representante_email'] ?? '');
+            $representante_telefono = trim($_POST['representante_telefono'] ?? '');
+            $representante_password = $_POST['representante_password'] ?? '';
+            
             if (empty($nombre)) {
                 $error = 'El nombre del fraccionamiento es obligatorio.';
             } else {
                 try {
-                    $stmt = $this->db->prepare("UPDATE fraccionamientos SET nombre = ?, descripcion = ?, direccion = ?, club_id = ?, activo = ? WHERE id = ?");
-                    $stmt->execute([$nombre, $descripcion, $direccion, $club_id ?: null, $activo, $id]);
+                    // Only update password if a new one is provided
+                    if (!empty($representante_password)) {
+                        $hashedPassword = password_hash($representante_password, PASSWORD_DEFAULT);
+                        $stmt = $this->db->prepare("UPDATE fraccionamientos SET nombre = ?, descripcion = ?, direccion = ?, club_id = ?, activo = ?, representante_nombre = ?, representante_email = ?, representante_telefono = ?, representante_password = ? WHERE id = ?");
+                        $stmt->execute([$nombre, $descripcion, $direccion, $club_id ?: null, $activo, $representante_nombre, $representante_email, $representante_telefono, $hashedPassword, $id]);
+                    } else {
+                        $stmt = $this->db->prepare("UPDATE fraccionamientos SET nombre = ?, descripcion = ?, direccion = ?, club_id = ?, activo = ?, representante_nombre = ?, representante_email = ?, representante_telefono = ? WHERE id = ?");
+                        $stmt->execute([$nombre, $descripcion, $direccion, $club_id ?: null, $activo, $representante_nombre, $representante_email, $representante_telefono, $id]);
+                    }
                     
                     $success = 'Fraccionamiento actualizado exitosamente.';
                     
@@ -575,12 +625,24 @@ class AdminController extends BaseController {
             $telefono = trim($_POST['telefono'] ?? '');
             $email = trim($_POST['email'] ?? '');
             
+            // Datos del representante
+            $representante_nombre = trim($_POST['representante_nombre'] ?? '');
+            $representante_email = trim($_POST['representante_email'] ?? '');
+            $representante_telefono = trim($_POST['representante_telefono'] ?? '');
+            $representante_password = $_POST['representante_password'] ?? '';
+            
             if (empty($nombre)) {
                 $error = 'El nombre de la empresa es obligatorio.';
             } else {
                 try {
-                    $stmt = $this->db->prepare("INSERT INTO empresas (nombre, rfc, razon_social, direccion, telefono, email) VALUES (?, ?, ?, ?, ?, ?)");
-                    $stmt->execute([$nombre, $rfc, $razon_social, $direccion, $telefono, $email]);
+                    // Hash password if provided
+                    $hashedPassword = null;
+                    if (!empty($representante_password)) {
+                        $hashedPassword = password_hash($representante_password, PASSWORD_DEFAULT);
+                    }
+                    
+                    $stmt = $this->db->prepare("INSERT INTO empresas (nombre, rfc, razon_social, direccion, telefono, email, representante_nombre, representante_email, representante_telefono, representante_password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    $stmt->execute([$nombre, $rfc, $razon_social, $direccion, $telefono, $email, $representante_nombre, $representante_email, $representante_telefono, $hashedPassword]);
                     
                     $success = 'Empresa creada exitosamente.';
                 } catch (PDOException $e) {
@@ -627,12 +689,25 @@ class AdminController extends BaseController {
             $email = trim($_POST['email'] ?? '');
             $activo = isset($_POST['activo']) ? 1 : 0;
             
+            // Datos del representante
+            $representante_nombre = trim($_POST['representante_nombre'] ?? '');
+            $representante_email = trim($_POST['representante_email'] ?? '');
+            $representante_telefono = trim($_POST['representante_telefono'] ?? '');
+            $representante_password = $_POST['representante_password'] ?? '';
+            
             if (empty($nombre)) {
                 $error = 'El nombre de la empresa es obligatorio.';
             } else {
                 try {
-                    $stmt = $this->db->prepare("UPDATE empresas SET nombre = ?, rfc = ?, razon_social = ?, direccion = ?, telefono = ?, email = ?, activo = ? WHERE id = ?");
-                    $stmt->execute([$nombre, $rfc, $razon_social, $direccion, $telefono, $email, $activo, $id]);
+                    // Only update password if a new one is provided
+                    if (!empty($representante_password)) {
+                        $hashedPassword = password_hash($representante_password, PASSWORD_DEFAULT);
+                        $stmt = $this->db->prepare("UPDATE empresas SET nombre = ?, rfc = ?, razon_social = ?, direccion = ?, telefono = ?, email = ?, activo = ?, representante_nombre = ?, representante_email = ?, representante_telefono = ?, representante_password = ? WHERE id = ?");
+                        $stmt->execute([$nombre, $rfc, $razon_social, $direccion, $telefono, $email, $activo, $representante_nombre, $representante_email, $representante_telefono, $hashedPassword, $id]);
+                    } else {
+                        $stmt = $this->db->prepare("UPDATE empresas SET nombre = ?, rfc = ?, razon_social = ?, direccion = ?, telefono = ?, email = ?, activo = ?, representante_nombre = ?, representante_email = ?, representante_telefono = ? WHERE id = ?");
+                        $stmt->execute([$nombre, $rfc, $razon_social, $direccion, $telefono, $email, $activo, $representante_nombre, $representante_email, $representante_telefono, $id]);
+                    }
                     
                     $success = 'Empresa actualizada exitosamente.';
                     

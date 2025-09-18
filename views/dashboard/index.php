@@ -13,6 +13,103 @@
         </div>
     </div>
 
+    <!-- Filtros del Dashboard -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <i class="bi bi-funnel"></i> Filtros del Dashboard
+            </h6>
+        </div>
+        <div class="card-body">
+            <form method="GET" action="<?= BASE_URL ?>/dashboard" id="dashboardFilters">
+                <div class="row">
+                    <!-- Filtros de fecha (para todos los usuarios) -->
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label for="fecha_inicio" class="form-label">Fecha Inicio</label>
+                            <input type="date" 
+                                   class="form-control" 
+                                   id="fecha_inicio" 
+                                   name="fecha_inicio"
+                                   value="<?= htmlspecialchars($filters['fecha_inicio'] ?? '') ?>">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label for="fecha_fin" class="form-label">Fecha Fin</label>
+                            <input type="date" 
+                                   class="form-control" 
+                                   id="fecha_fin" 
+                                   name="fecha_fin"
+                                   value="<?= htmlspecialchars($filters['fecha_fin'] ?? '') ?>">
+                        </div>
+                    </div>
+
+                    <?php if (($_SESSION['user_role'] ?? '') === 'superadmin'): ?>
+                    <!-- Filtros adicionales para SuperAdmin -->
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="club_id" class="form-label">Club</label>
+                            <select class="form-control" id="club_id" name="club_id">
+                                <option value="">Todos los Clubes</option>
+                                <?php foreach (($filterOptions['clubes'] ?? []) as $club): ?>
+                                <option value="<?= $club['id'] ?>" 
+                                        <?= ($filters['club_id'] ?? '') == $club['id'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($club['nombre']) ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="empresa_id" class="form-label">Empresa</label>
+                            <select class="form-control" id="empresa_id" name="empresa_id">
+                                <option value="">Todas las Empresas</option>
+                                <?php foreach (($filterOptions['empresas'] ?? []) as $empresa): ?>
+                                <option value="<?= $empresa['id'] ?>" 
+                                        <?= ($filters['empresa_id'] ?? '') == $empresa['id'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($empresa['nombre']) ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="fraccionamiento_id" class="form-label">Fraccionamiento</label>
+                            <select class="form-control" id="fraccionamiento_id" name="fraccionamiento_id">
+                                <option value="">Todos los Fraccionamientos</option>
+                                <?php foreach (($filterOptions['fraccionamientos'] ?? []) as $fraccionamiento): ?>
+                                <option value="<?= $fraccionamiento['id'] ?>" 
+                                        <?= ($filters['fraccionamiento_id'] ?? '') == $fraccionamiento['id'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($fraccionamiento['nombre']) ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <!-- Botones de acción -->
+                    <div class="col-md-<?= ($_SESSION['user_role'] ?? '') === 'superadmin' ? '12' : '6' ?>">
+                        <div class="mb-3">
+                            <label class="form-label">&nbsp;</label>
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-search"></i> Aplicar Filtros
+                                </button>
+                                <a href="<?= BASE_URL ?>/dashboard" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-clockwise"></i> Limpiar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Tarjetas de estadísticas financieras -->
     <div class="row mb-4">
         <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
@@ -81,10 +178,10 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Ingresos del Mes
+                                Ingresos del Período
                             </div>
                             <div class="h6 mb-0 font-weight-bold text-gray-800">
-                                $<?= number_format($stats['ingresos_mes'], 2) ?>
+                                $<?= number_format($stats['ingresos_periodo'], 2) ?>
                             </div>
                         </div>
                         <div class="col-auto">
@@ -101,10 +198,10 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                Gastos del Mes
+                                Gastos del Período
                             </div>
                             <div class="h6 mb-0 font-weight-bold text-gray-800">
-                                $<?= number_format($stats['gastos_mes'], 2) ?>
+                                $<?= number_format($stats['gastos_periodo'], 2) ?>
                             </div>
                         </div>
                         <div class="col-auto">
@@ -116,19 +213,19 @@
         </div>
 
         <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
-            <div class="card border-left-<?= $stats['utilidad_mes'] >= 0 ? 'info' : 'warning' ?> shadow h-100 py-2 dashboard-card">
+            <div class="card border-left-<?= $stats['utilidad_periodo'] >= 0 ? 'info' : 'warning' ?> shadow h-100 py-2 dashboard-card">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-<?= $stats['utilidad_mes'] >= 0 ? 'info' : 'warning' ?> text-uppercase mb-1">
-                                Utilidad del Mes
+                            <div class="text-xs font-weight-bold text-<?= $stats['utilidad_periodo'] >= 0 ? 'info' : 'warning' ?> text-uppercase mb-1">
+                                Utilidad del Período
                             </div>
                             <div class="h6 mb-0 font-weight-bold text-gray-800">
-                                $<?= number_format($stats['utilidad_mes'], 2) ?>
+                                $<?= number_format($stats['utilidad_periodo'], 2) ?>
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="bi bi-<?= $stats['utilidad_mes'] >= 0 ? 'trending-up' : 'trending-down' ?> text-<?= $stats['utilidad_mes'] >= 0 ? 'info' : 'warning' ?>" style="font-size: 1.5rem;"></i>
+                            <i class="bi bi-<?= $stats['utilidad_periodo'] >= 0 ? 'trending-up' : 'trending-down' ?> text-<?= $stats['utilidad_periodo'] >= 0 ? 'info' : 'warning' ?>" style="font-size: 1.5rem;"></i>
                         </div>
                     </div>
                 </div>
@@ -231,7 +328,7 @@
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">
-                        <i class="bi bi-graph-up"></i> Ingresos vs Gastos (Últimos 6 Meses)
+                        <i class="bi bi-graph-up"></i> Ingresos vs Gastos por Día (Período Seleccionado)
                     </h6>
                 </div>
                 <div class="card-body">
@@ -244,7 +341,7 @@
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">
-                        <i class="bi bi-pie-chart"></i> Gastos por Categoría (Último Mes)
+                        <i class="bi bi-pie-chart"></i> Gastos por Categoría (Período Seleccionado)
                     </h6>
                 </div>
                 <div class="card-body">
@@ -341,23 +438,23 @@
 
 <script>
 // Datos para los gráficos
-const ingresosPorMes = <?= json_encode($chartData['ingresos_por_mes']) ?>;
+const ingresosPorDia = <?= json_encode($chartData['ingresos_por_dia']) ?>;
 const ingresosPorClub = <?= json_encode($chartData['ingresos_por_club']) ?>;
 const gastosPorCategoria = <?= json_encode($chartData['gastos_por_categoria']) ?>;
 
-// Gráfico de Ingresos vs Gastos por mes
+// Gráfico de Ingresos vs Gastos por día
 const ctxIngresosVsGastos = document.getElementById('ingresosVsGastosChart').getContext('2d');
 new Chart(ctxIngresosVsGastos, {
     type: 'line',
     data: {
-        labels: ingresosPorMes.map(item => {
-            const date = new Date(item.mes + '-01');
-            return date.toLocaleDateString('es-MX', { month: 'short', year: 'numeric' });
+        labels: ingresosPorDia.map(item => {
+            const date = new Date(item.fecha);
+            return date.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' });
         }),
         datasets: [
             {
                 label: 'Ingresos',
-                data: ingresosPorMes.map(item => parseFloat(item.ingresos || 0)),
+                data: ingresosPorDia.map(item => parseFloat(item.ingresos || 0)),
                 borderColor: 'rgb(34, 197, 94)',
                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
                 tension: 0.4,
@@ -365,7 +462,7 @@ new Chart(ctxIngresosVsGastos, {
             },
             {
                 label: 'Gastos',
-                data: ingresosPorMes.map(item => parseFloat(item.gastos || 0)),
+                data: ingresosPorDia.map(item => parseFloat(item.gastos || 0)),
                 borderColor: 'rgb(239, 68, 68)',
                 backgroundColor: 'rgba(239, 68, 68, 0.1)',
                 tension: 0.4,
@@ -500,6 +597,27 @@ new Chart(ctxClub, {
                 }
             }
         }
+    }
+});
+</script>
+
+<script>
+// Configurar fechas por defecto si están vacías
+document.addEventListener('DOMContentLoaded', function() {
+    const fechaInicio = document.getElementById('fecha_inicio');
+    const fechaFin = document.getElementById('fecha_fin');
+    
+    if (!fechaInicio.value) {
+        const hoy = new Date();
+        const hace30Dias = new Date();
+        hace30Dias.setDate(hace30Dias.getDate() - 30);
+        
+        fechaInicio.value = hace30Dias.toISOString().split('T')[0];
+    }
+    
+    if (!fechaFin.value) {
+        const hoy = new Date();
+        fechaFin.value = hoy.toISOString().split('T')[0];
     }
 });
 </script>

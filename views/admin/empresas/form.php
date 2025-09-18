@@ -96,6 +96,59 @@
                             </div>
                         </div>
 
+                        <hr>
+                        <h6 class="text-primary"><i class="bi bi-person-badge"></i> Datos del Representante</h6>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="representante_nombre" class="form-label">Nombre del Representante</label>
+                                    <input type="text" 
+                                           class="form-control" 
+                                           id="representante_nombre" 
+                                           name="representante_nombre" 
+                                           value="<?= htmlspecialchars($empresa['representante_nombre'] ?? $_POST['representante_nombre'] ?? '') ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="representante_email" class="form-label">Email del Representante</label>
+                                    <input type="email" 
+                                           class="form-control" 
+                                           id="representante_email" 
+                                           name="representante_email" 
+                                           value="<?= htmlspecialchars($empresa['representante_email'] ?? $_POST['representante_email'] ?? '') ?>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="representante_telefono" class="form-label">Teléfono del Representante</label>
+                                    <input type="tel" 
+                                           class="form-control" 
+                                           id="representante_telefono" 
+                                           name="representante_telefono" 
+                                           value="<?= htmlspecialchars($empresa['representante_telefono'] ?? $_POST['representante_telefono'] ?? '') ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="representante_password" class="form-label">
+                                        Contraseña del Representante 
+                                        <?php if ($action === 'edit'): ?>
+                                        <small class="text-muted">(dejar vacío para mantener actual)</small>
+                                        <?php endif; ?>
+                                    </label>
+                                    <input type="password" 
+                                           class="form-control" 
+                                           id="representante_password" 
+                                           name="representante_password">
+                                </div>
+                            </div>
+                        </div>
+
                         <?php if ($action === 'edit'): ?>
                         <div class="mb-3">
                             <div class="form-check">
